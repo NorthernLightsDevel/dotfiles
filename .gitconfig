@@ -1,0 +1,44 @@
+[include]
+	path = ~/.gitsecrets
+[alias]
+	s = status
+	cm = commit -S -m
+	visual = !gitextensions browse .&
+	amend = commit --amend
+	co = checkout
+	br = branch
+	ca = commit -a -S -m
+	unstage = reset HEAD --
+	rst = reset HEAD --hard
+	cb = checkout -B
+	history = log --oneline --graph --decorate --all
+	untrack = update-index --assume-unchange
+	track = update-index --no-assume-unchange
+	test = log --oneline --graph
+	update = "!f() { git fetch -u origin \"$1:$1\"; };f"
+	feature = "!f() { git worktree add ../$1 --checkout feature/$1;f"
+	bugfix = "!f() { git worktree add ../$1 --checkout bugfix/$1;f"
+[merge]
+	ff = no
+[diff]
+	guitool = kdiff3
+[core]
+	autocrlf = false
+	editor = nvim
+	eol = lf
+[pull]
+	rebase = true
+	ff = only
+[fetch]
+	prune = false
+[rebase]
+	autoStash = false
+[branch "master"]
+	mergeOptions = --no-ff
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[commit]
+	gpgSign = true
