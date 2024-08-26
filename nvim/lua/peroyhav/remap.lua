@@ -50,3 +50,5 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 vim.keymap.set("n", "J", "V:m '>+1<CR>gv=gv<Esc>")
 vim.keymap.set("n", "K", "V:m '<-2<CR>gv=gv<Esc>")
+
+vim.keymap.set("n", "<leader>co", ":%bd|e#|bd#<CR>")
