@@ -139,7 +139,9 @@ export CHROME_BIN=/usr/bin/chromium
 
 export GPG_TTY=$(tty)
 
-source /usr/share/git/completion/git-completion.bash 
+if [ -f	usr/share/git/completion/git-completion.bash ]; then
+    source /usr/share/git/completion/git-completion.bash 
+fi
 
 # Load Angular CLI autocompletion.
 source <(ng completion script)
