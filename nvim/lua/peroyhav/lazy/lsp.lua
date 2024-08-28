@@ -154,7 +154,7 @@ return {
 			omnisharp = {
 				cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
 				filetypes = { "cs", "vb", "xaml" },
-				root_dir = require("lspconfig/util").root_pattern("*.sln", "*.csproj", ".git"),
+				root_dir = require("lspconfig/util").root_pattern("*.sln", ".git"),
 			},
 			-- clangd = {},
 			-- gopls = {},
