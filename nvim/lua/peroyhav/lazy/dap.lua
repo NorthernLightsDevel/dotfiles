@@ -1,12 +1,17 @@
 return {
+	"rcarriga/nvim-dap-ui",
 	"mfussenegger/nvim-dap",
-	"NicholasMata/nvim-dap-cs",
+	dependencies = {
+		{ "williamboman/mason.nvim", config = true }, -- NOTE: Must be loaded before dependants
+		"jay-babu/mason-nvim-dap.nvim",
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+	},
 	config = function()
-		require("dap").setup({
-			callback = function(event)
-				vim.keymap.set("n", "<F32>", require("dap").toggle_breakpoint)
-			end,
+		require("mason").setup()
+		require("mason-nvim-dap").setup({
+			ensure_installed = { "netcoredbg" },
 		})
-		require("dap-cs").setup()
+		require("dap").setup()
+		require("dap-ui").setup()
 	end,
 }
