@@ -134,6 +134,8 @@ fi
 export PATH="$PATH:$HOME/.dotnet:$HOME/.dotnet/tools"
 
 export PATH="$PATH:/opt/nvim-linux64/bin"
+
+export PATH="$PATH:$HOME/bin"
 alias vim=nvim
 alias vi=nvim
 
@@ -168,3 +170,5 @@ jwtdecode() {
 	done
 	echo ""
 }
+
+neofetch
