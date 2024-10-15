@@ -18,7 +18,18 @@ $ cd ~
 ~$ ln -s <dotfiles dir>/.gitconfig
 ~$ ln -s <dotfiles dir>/.bashrc
 ~$ ln -s <dotfiles dir>/.profile
+~$ ln -s <dotfiles dir>/.tmux.conf
 ~$ mkdir -p .config
 ~$ cd .config
 ~$ ln -s <dotfiles dir>/nvim
+```
+
+### Install tmux
+1. Install tmux using your desired package manager
+1. Download and install plugins
+``` bash
+$ git clone --depth 1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+$ cd <dotfiles git dir>
+$ tmux new -s dotfiles
+$ <C-a>I
 ```

@@ -45,10 +45,10 @@ vim.keymap.set("n", "<leader>P", '"+P')
 
 vim.keymap.set("n", "<leader>wc", ":w<CR>:Ex<CR>")
 
-vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv")
 
-vim.keymap.set("n", "<C-j>", "V:m '>+1<CR>gv=gv<Esc>")
-vim.keymap.set("n", "<C-k>", "V:m '<-2<CR>gv=gv<Esc>")
+vim.keymap.set("n", "<A-j>", "V:m '>+1<CR>gv=gv<Esc>")
+vim.keymap.set("n", "<A-k>", "V:m '<-2<CR>gv=gv<Esc>")
 
 vim.keymap.set("n", "<leader>co", ":%bd|e#|bd#<CR>")
