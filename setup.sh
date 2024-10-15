@@ -25,21 +25,34 @@ if [ ! -e "${HOME}/.gitconfig" ]; then
    ln -s "${WD}/.gitconfig" "${HOME}/.gitconfig"
 fi
 
+# Set up GIT config with signing secret
 if [ ! -e "${HOME}/.gitsecrets" ]; then
-   echo "[user]" > "${HOME}/.gitsecrets"
-   echo "Git email:"
-   email=$(</dev/stdin)
-   echo "email=${email}" >> "${HOME}/.gitsecrets"
+   echo -n "Git email: "
+   read -r email
 
-   echo "Name: "
-   name=$(</dev/stdin)
-   echo "name=${name}" >> "${HOME}/.gitsecrets"
-
-   gpg --default-new-key-algo rsa4096 --gen-key 
+   echo -n "Name: "
+   read -r name
    
-   keyid=$(gpg --list-secret-keys --keyid-format=long | grep sec)
+   gpg --list-secret-keys $email # 2>$1 1>/dev/null
+   if [[ $? > 0 ]] 
+   then
+      gpg --batch --gen-key <<EOF
+Key-Type: 1
+Key-Length: 4096
+Name-Real: $name
+Name-Email: $email
+Expire-Date: 0
+EOF
+   fi
+
+   keyid=$(gpg --list-secret-keys --keyid-format=long $email | grep sec)
    keyid=${keyid#*/}
    keyid=${keyid:0:16}
-   echo "signingKey=${keyid}" >> "${HOME}/.gitsecrets"
+   echo "[user]" > "${HOME}/.gitsecrets"
+   echo "   email = ${email}" >> "${HOME}/.gitsecrets"
+   echo "   name = ${name}" >> "${HOME}/.gitsecrets"
+   echo "   signingKey = ${keyid}" >> "${HOME}/.gitsecrets"
 
+   echo "The following key can be shared to ensure others may trust commits signed by your key"
+   gpg --armor --export $email
 fi
