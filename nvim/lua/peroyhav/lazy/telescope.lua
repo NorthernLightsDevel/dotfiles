@@ -77,8 +77,8 @@ return { -- Fuzzy Finder (files, lsp, etc)
 		vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
 		vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
 		vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
-		vim.keymap.set("n", "<leader>gws", require("telescope").extensions.git_worktree.git_worktrees)
-		vim.keymap.set("n", "<leader>gwc", require("telescope").extensions.git_worktree.create_git_worktree)
+		vim.keymap.set("n", "<leader>sa", require("telescope").extensions.git_worktree.git_worktrees)
+		vim.keymap.set("n", "<leader>sz", require("telescope").extensions.git_worktree.create_git_worktree)
 
 		-- Slightly advanced example of overriding default behavior and theme
 		vim.keymap.set("n", "<leader>/", function()
