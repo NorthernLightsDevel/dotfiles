@@ -136,8 +136,8 @@ export PATH="$PATH:$HOME/.dotnet:$HOME/.dotnet/tools"
 export PATH="$PATH:/opt/nvim-linux64/bin"
 
 export PATH="$PATH:$HOME/bin"
-alias vim=nvim
-alias vi=nvim
+which vim && alias vi=vim
+which nvim && alias vi=nvim
 
 export CHROME_BIN=/usr/bin/chromium
 
@@ -148,7 +148,10 @@ if [ -f	usr/share/git/completion/git-completion.bash ]; then
 fi
 
 # Load Angular CLI autocompletion.
-source <(ng completion script)
+ngExists=`find $HOME/.nvm -name ng | wc -l`
+if [[ $ngExists -gt 0 ]];then
+    source <(ng completion script)
+fi
 
 paddbase64() {
 	input=$1
