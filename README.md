@@ -1,7 +1,7 @@
 # Peroyhav's Dotfiles
 ## How to "install"
-### Windows
 
+### Windows
 ``` cmd
 C:\> cd %USERPROFILE%
 %USERPROFILE% > mklink .gitconfig <dotfiles dir>\.gitconfig
@@ -13,23 +13,17 @@ C:\> cd %USERPROFILE%
 ```
 
 ### Linux
+I've made a script for linux, as thats where I primarily will be likelly to recreate my install.
 ``` bash
-$ cd ~
-~$ ln -s <dotfiles dir>/.gitconfig
-~$ ln -s <dotfiles dir>/.bashrc
-~$ ln -s <dotfiles dir>/.profile
-~$ ln -s <dotfiles dir>/.tmux.conf
-~$ mkdir -p .config
-~$ cd .config
-~$ ln -s <dotfiles dir>/nvim
+<dotfiles dir> $ ./setup.sh
 ```
 
 ### Install tmux
 1. Install tmux using your desired package manager
-1. Download and install plugins
+1. Download and install plugin manager
 ``` bash
 $ git clone --depth 1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-$ cd <dotfiles git dir>
-$ tmux new -s dotfiles
-$ <C-a>I
+$ cd
+$ tmux new -s home # I usually name session 0 home, and add new sessions for each thing I work with so they're numbered 1 .. n
+$ <C-b>I
 ```
