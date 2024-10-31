@@ -136,8 +136,8 @@ export PATH="$PATH:$HOME/.dotnet:$HOME/.dotnet/tools"
 export PATH="$PATH:/opt/nvim-linux64/bin"
 
 export PATH="$PATH:$HOME/bin"
-which vim && alias vi=vim
-which nvim && alias vi=nvim
+which vim &>/dev/null && alias vi=vim && export EDITOR=vim
+which nvim &>/dev/null && alias vi=nvim && export EDITOR=nvim
 
 export CHROME_BIN=/usr/bin/chromium
 
