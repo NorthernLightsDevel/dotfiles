@@ -57,7 +57,7 @@ echo "Pass 1: writing 0x00 to the entire disk."
 pv -tpreb -s "$device_size" /dev/zero | dd of="$disk" bs=1M oflag=direct status=none
 
 echo "Pass 2: writing random data to the disk."
-pv -tpreb /dev/urandom | dd of="$disk" bs=1M oflag=direct status=none
+pv -tpreb -s "$device_size" /dev/urandom | dd of="$disk" bs=1M oflag=direct status=none
 
 pass=3
 for ((i=1; i<= random_passes;i++));do
