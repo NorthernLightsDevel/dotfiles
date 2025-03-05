@@ -9,7 +9,7 @@ return {
 		end)
 		vim.keymap.set("n", "<leader>rr", ":Rest run<CR>")
 
-		-- require("rest-nvim").setup()
+		require("rest-nvim").setup()
 		-- vim.g.rest_nvim
 	end,
 }

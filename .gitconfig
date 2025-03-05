@@ -20,6 +20,7 @@
 	bugfix = "!f() { git worktree add ../$1 --checkout bugfix/$1;f"
 [merge]
 	ff = no
+	tool = nvimdiff
 [diff]
 	guitool = kdiff3
 	tool = nvimdiff

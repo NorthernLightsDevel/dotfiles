@@ -4,7 +4,6 @@
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-vim.keymap.set("i", "<C-c>", "<Esc>")
 -- Diagnostic keymaps
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
@@ -38,10 +37,12 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 vim.keymap.set("n", "<leader>ex", ":Ex<CR>")
 
 local os = require("os")
-vim.keymap.set("n", "<leader>Y", '"+Y')
-vim.keymap.set("n", "<leader>y", '"+y')
-vim.keymap.set("n", "<leader>p", '"+p')
-vim.keymap.set("n", "<leader>P", '"+P')
+vim.keymap.set("n", "<leader>Y", '"+Y', { desc = "[Y]ank current line to system clipboard"})
+vim.keymap.set("n", "<leader>y", '"+y', { desc = "[y]ank to clipboard"})
+vim.keymap.set("v", "<leader>y", '"+y', { desc = "[y]ank selection to clipboard"})
+vim.keymap.set("n", "<leader>p", '"+p', { desc = "[p]aste content of system clipboard after cursor position"})
+vim.keymap.set("n", "<leader>P", '"+P', { desc = "[P]aste content of system clipboard before cursor position"})
+vim.keymap.set("v", "<leader>p", '"+p', { desc = "[p]aste content of system clipboard over current selection"})
 
 vim.keymap.set("n", "<leader>wc", ":w<CR>:Ex<CR>")
 
