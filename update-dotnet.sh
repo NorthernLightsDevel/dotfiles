@@ -3,7 +3,7 @@
 # Get dotnet install script if not found
 if [ ! -f "~/dotnet-install.sh" ]
 then
-    wget https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh -o ~/dotnet-install.sh
+    wget https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh -O ~/dotnet-install.sh
     chmod +x ~/dotnet-install.sh
 fi
 
