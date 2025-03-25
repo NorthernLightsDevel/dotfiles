@@ -7,3 +7,4 @@ vim.g.maplocalleader = " "
 require("peroyhav.set")
 require("peroyhav.remap")
 require("peroyhav.lazy_init")
+require("peroyhav.sniplets")

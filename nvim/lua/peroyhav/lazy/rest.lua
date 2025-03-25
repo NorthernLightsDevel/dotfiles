@@ -1,6 +1,6 @@
 return {
 	"rest-nvim/rest.nvim",
-	dependencies = { "nvim-telescope/telescope.nvim" },
+	dependencies = { "nvim-telescope/telescope.nvim", "vhyrro/luarocks.nvim" },
 	config = function()
 		local telescope = require("telescope")
 		telescope.load_extension("rest")

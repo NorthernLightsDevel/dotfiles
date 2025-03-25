@@ -94,6 +94,8 @@ fi
 alias ll='ls -AlhF'
 alias la='ls -A'
 alias l='ls -CF'
+alias dbui='nvim +DBUI'
+alias updatenvim='nvim --headless "+Lazy! sync" "+Lazy! update" +qa'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
