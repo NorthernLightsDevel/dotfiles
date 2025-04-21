@@ -9,6 +9,16 @@ if [ ! -e "${HOME}/.config/nvim" ]; then
    ln -s "${WD}/nvim" "${HOME}/.config/nvim"
 fi
 
+if [ ! -e "${HOME}/.config/alacritty/alacritty.toml" ]; then
+   mkdir -p "${HOME}/.config/alacritty"
+   ln -s ${WD}/alacritty.toml "${HOME}/.config/alacritty/alacritty.toml"
+fi
+
+if [ ! -e "${HOME}/.config/hypr/hyprland.conf" ]; then
+   mkdir -p "${HOME}/.config/hypr"
+   ln -s "${WD}/hyprland.conf" "${HOME}/.config/hypr/hyprland.conf"
+fi
+
 if [ ! -e "${HOME}/.bashrc" ]; then
    ln -s "${WD}/.bashrc" "${HOME}/.bashrc"
 fi
