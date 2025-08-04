@@ -177,4 +177,4 @@ jwtdecode() {
 	echo ""
 }
 
-neofetch
+fastfetch

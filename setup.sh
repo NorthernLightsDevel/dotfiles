@@ -15,8 +15,7 @@ if [ ! -e "${HOME}/.config/alacritty/alacritty.toml" ]; then
 fi
 
 if [ ! -e "${HOME}/.config/hypr/hyprland.conf" ]; then
-   mkdir -p "${HOME}/.config/hypr"
-   ln -s "${WD}/hyprland.conf" "${HOME}/.config/hypr/hyprland.conf"
+   ln -sf "${WD}/hypr" "${HOME}/.config/hypr"
 fi
 
 if [ ! -e "${HOME}/.bashrc" ]; then
