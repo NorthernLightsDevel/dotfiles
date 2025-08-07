@@ -65,6 +65,7 @@ return {
 			ensure_installed = {
 				-- Update this to ensure that you have the debuggers for the langs you want
 				"delve",
+				"netcoredbg",
 			},
 		})
 
@@ -102,50 +103,54 @@ return {
 				detached = vim.fn.has("win32") == 0,
 			},
 		})
-		function get_dotnet_executable()
-			function get_project_root(current_dir)
-				local Path = require("plenary.path")
-				if not Path then
-					error("Could not load plenary.path")
-				end
-				local path = Path:new(current_dir)
-
-				while true do
-					local project_files = vim.fn.glob(path:absolute() .. "/*.{csproj,sln}", false, true)
-					if #project_files > 0 then
-						return path:absolute()
-					end
-
-					local parent = path:parent()
-					if parent:absolute() == path:absolute() then
-						return nil
-					end
-					path = parent
-				end
-			end
-
-			function get_project_file(project_root)
-				local csproj_files = vim.fn.glob(project_root .. "/*.csproj", false, true)
-				if #csproj_files > 0 then
-					return csproj_files[1]
-				end
-				local sln_files = vim.fn.glob(project_root .. "/*.sln", false, true)
-				if #sln_files > 0 then
-					return sln_files[1]
-				end
-				return nil
-			end
+		function get_project_root()
 			local current_file = vim.api.nvim_buf_get_name(0)
-			local current_dir = vim.fn.fnamemodify(current_file, ":p:h")
-			local project_root = get_project_root(current_dir)
-			if not project_root then
-				error("Could not find project root(no .csproj or .sln found in path)")
+			if not current_file then
+				error("Could not determine current file.")
 			end
+			local current_dir = vim.fn.fnamemodify(current_file, ":p:h")
+			local Path = require("plenary.path")
+			if not Path then
+				error("Could not load plenary.path")
+			end
+			local path = Path:new(current_dir)
+
+			while true do
+				local project_files = vim.fn.glob(path:absolute() .. "/*.{csproj,sln}", false, true)
+				if #project_files > 0 then
+					return path:absolute()
+				end
+
+				local parent = path:parent()
+				if parent:absolute() == path:absolute() then
+					return nil
+				end
+				path = parent
+			end
+		end
+		function get_project_file(project_root)
+			local csproj_files = vim.fn.glob(project_root .. "/*.csproj", false, true)
+			if #csproj_files > 0 then
+				return csproj_files[1]
+			end
+			local sln_files = vim.fn.glob(project_root .. "/*.sln", false, true)
+			if #sln_files > 0 then
+				return sln_files[1]
+			end
+			return nil
+		end
+		function get_dotnet_project_file(project_root)
 			local project_file = get_project_file(project_root)
 			if not project_file then
 				error("Could not locate project file in " .. project_root)
 			end
-
+		end
+		function get_dotnet_executable()
+			local project_root = get_project_root()
+			if not project_root then
+				error("Could not find project root(no .csproj or .sln found in path)")
+			end
+			local project_file = get_dotnet_project_file(project_root)
 			local project_name = vim.fn.fnamemodify(project_file, ":t:r")
 			local debug_path = vim.fn.glob(project_root .. "/bin/Debug/net*", false, true)
 			if #debug_path == 0 then
@@ -172,11 +177,20 @@ return {
 			error("No file matcing " .. filename .. "(.exe|.dll)? found")
 		end
 
+		print(vim.api.nvim_buf_get_name(0))
 		dap.configurations.cs = {
 			{
-				-- Must be "coreclr" or it will be ignored by the plugin
 				type = "coreclr",
 				name = "Launch",
+				preLaunchTask = {
+					task = "build",
+					type = "shell",
+					command = "dotnet",
+					args = {
+						"build",
+						get_project_file(get_project_root()),
+					},
+				},
 				program = function()
 					return get_dotnet_executable()
 				end,
