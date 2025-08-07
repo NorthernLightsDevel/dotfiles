@@ -37,12 +37,12 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 vim.keymap.set("n", "<leader>ex", ":Ex<CR>")
 
 local os = require("os")
-vim.keymap.set("n", "<leader>Y", '"+Y', { desc = "[Y]ank current line to system clipboard"})
-vim.keymap.set("n", "<leader>y", '"+y', { desc = "[y]ank to clipboard"})
-vim.keymap.set("v", "<leader>y", '"+y', { desc = "[y]ank selection to clipboard"})
-vim.keymap.set("n", "<leader>p", '"+p', { desc = "[p]aste content of system clipboard after cursor position"})
-vim.keymap.set("n", "<leader>P", '"+P', { desc = "[P]aste content of system clipboard before cursor position"})
-vim.keymap.set("v", "<leader>p", '"+p', { desc = "[p]aste content of system clipboard over current selection"})
+vim.keymap.set("n", "<leader>Y", '"+Y', { desc = "[Y]ank current line to system clipboard" })
+vim.keymap.set("n", "<leader>y", '"+y', { desc = "[y]ank to clipboard" })
+vim.keymap.set("v", "<leader>y", '"+y', { desc = "[y]ank selection to clipboard" })
+vim.keymap.set("n", "<leader>p", '"+p', { desc = "[p]aste content of system clipboard after cursor position" })
+vim.keymap.set("n", "<leader>P", '"+P', { desc = "[P]aste content of system clipboard before cursor position" })
+vim.keymap.set("v", "<leader>p", '"+p', { desc = "[p]aste content of system clipboard over current selection" })
 
 vim.keymap.set("n", "<leader>wc", ":w<CR>:Ex<CR>")
 
@@ -53,3 +53,5 @@ vim.keymap.set("n", "<A-j>", "V:m '>+1<CR>gv=gv<Esc>")
 vim.keymap.set("n", "<A-k>", "V:m '<-2<CR>gv=gv<Esc>")
 
 vim.keymap.set("n", "<leader>co", ":%bd|e#|bd#<CR>")
+vim.keymap.set("n", "<leader>cb", ":!dotnet build<CR>", { desc = "[C]ode [B]uild" })
+vim.keymap.set("n", "<leader>cr", ":!dotnet run<CR>", { desc = "[C]ode [R]un" })
