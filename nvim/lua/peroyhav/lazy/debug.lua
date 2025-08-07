@@ -102,26 +102,85 @@ return {
 				detached = vim.fn.has("win32") == 0,
 			},
 		})
+		function get_dotnet_executable()
+			function get_project_root(current_dir)
+				local Path = require("plenary.path")
+				if not Path then
+					error("Could not load plenary.path")
+				end
+				local path = Path:new(current_dir)
 
-		require("dap-cs").setup({
-			-- Additional dap configurations can be added.
-			-- dap_configurations accepts a list of tables where each entry
-			-- represents a dap configuration. For more details do:
-			-- :help dap-configuration
-			dap_configurations = {
-				{
-					-- Must be "coreclr" or it will be ignored by the plugin
-					type = "coreclr",
-					name = "Attach remote",
-					mode = "remote",
-					request = "attach",
-				},
+				while true do
+					local project_files = vim.fn.glob(path:absolute() .. "/*.{csproj,sln}", false, true)
+					if #project_files > 0 then
+						return path:absolute()
+					end
+
+					local parent = path:parent()
+					if parent:absolute() == path:absolute() then
+						return nil
+					end
+					path = parent
+				end
+			end
+
+			function get_project_file(project_root)
+				local csproj_files = vim.fn.glob(project_root .. "/*.csproj", false, true)
+				if #csproj_files > 0 then
+					return csproj_files[1]
+				end
+				local sln_files = vim.fn.glob(project_root .. "/*.sln", false, true)
+				if #sln_files > 0 then
+					return sln_files[1]
+				end
+				return nil
+			end
+			local current_file = vim.api.nvim_buf_get_name(0)
+			local current_dir = vim.fn.fnamemodify(current_file, ":p:h")
+			local project_root = get_project_root(current_dir)
+			if not project_root then
+				error("Could not find project root(no .csproj or .sln found in path)")
+			end
+			local project_file = get_project_file(project_root)
+			if not project_file then
+				error("Could not locate project file in " .. project_root)
+			end
+
+			local project_name = vim.fn.fnamemodify(project_file, ":t:r")
+			local debug_path = vim.fn.glob(project_root .. "/bin/Debug/net*", false, true)
+			if #debug_path == 0 then
+				error("Project not compiled, please build " .. project_file)
+			end
+
+			local filename = debug_path[1] .. "/" .. project_name
+			if not filename then
+				error("not able to create filename")
+			end
+
+			if vim.fn.filereadable(filename) then
+				return filename
+			end
+
+			if vim.fn.filereadable(filename .. ".exe") then
+				return filename .. ".exe"
+			end
+
+			if vim.fn.filereadable(filename .. ".dll") then
+				return filename .. ".dll"
+			end
+
+			error("No file matcing " .. filename .. "(.exe|.dll)? found")
+		end
+
+		dap.configurations.cs = {
+			{
+				-- Must be "coreclr" or it will be ignored by the plugin
+				type = "coreclr",
+				name = "Launch",
+				program = function()
+					return get_dotnet_executable()
+				end,
 			},
-			netcoredbg = {
-				-- the path to the executable netcoredbg which will be used for debugging.
-				-- by default, this is the "netcoredbg" executable on your PATH.
-				path = "netcoredbg",
-			},
-		})
+		}
 	end,
 }
