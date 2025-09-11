@@ -65,13 +65,25 @@ return {
 		vim.keymap.set("n", "<S-F8>", dapui.toggle, { desc = "Debug: See last session result." })
 
 		dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-		dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-		dap.listeners.before.event_exited["dapui_config"] = dapui.close
 
 		require("dap-go").setup({
 			delve = {
 				detached = vim.fn.has("win32") == 0,
 			},
 		})
+
+		dap.listeners.before.event_module["preLaunchTask"] = function(session, body, command)
+			error(body)
+			local task = body.task
+			if task.type == "shell" then
+				local command = table.concat(vim.tbl_flatten({ task.command, task.args }), " ")
+				print("Running pre-launch task: " .. command)
+				local result = vim.fn.system(command)
+				if vim.v.shell_error ~= 0 then
+					error("Pre-launch task: " .. command .. " failed.")
+				end
+				return result
+			end
+		end
 	end,
 }

@@ -150,10 +150,12 @@ if [ -f	usr/share/git/completion/git-completion.bash ]; then
     source /usr/share/git/completion/git-completion.bash 
 fi
 
-# Load Angular CLI autocompletion.
-ngExists=`find $HOME/.nvm -name ng | wc -l`
-if [[ $ngExists -gt 0 ]];then
-    source <(ng completion script)
+if [ -d $HOME/.nvm ]; then
+    # Load Angular CLI autocompletion.
+    ngExists=`find $HOME/.nvm -name ng | wc -l`
+    if [[ $ngExists -gt 0 ]];then
+	source <(ng completion script)
+    fi
 fi
 
 paddbase64() {
@@ -176,5 +178,3 @@ jwtdecode() {
 	done
 	echo ""
 }
-
-fastfetch
