@@ -129,6 +129,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+if [ -f ~/.personalbashrc ]; then
+    source ~/.personalbashrc
+fi
+
 if [ -f ~/.workbashrc ]; then
     source ~/.workbashrc
 fi
@@ -178,3 +182,11 @@ jwtdecode() {
 	done
 	echo ""
 }
+
+# Created by `pipx` on 2025-09-19 06:45:59
+export PATH="$PATH:/home/peroyhav/.local/bin"
+eval "$(rbenv init - bash)"
+
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
