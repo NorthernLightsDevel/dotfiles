@@ -147,6 +147,12 @@ return {
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
+		local lspconfig = require("lspconfig")
+		local tsserver_name = "ts_ls"
+		if not lspconfig[tsserver_name] and lspconfig.ts_ls then
+			tsserver_name = "ts_ls"
+		end
+
 		-- Enable the following language servers
 		--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 		--
@@ -184,7 +190,22 @@ return {
 					},
 				},
 			},
+			html = {},
+			cssls = {},
 		}
+
+		if tsserver_name then
+			servers[tsserver_name] = {
+				settings = {
+					typescript = {
+						format = { enable = false },
+					},
+					javascript = {
+						format = { enable = false },
+					},
+				},
+			}
+		end
 
 		-- Ensure the servers and tools above are installed
 		--  To check the current status of installed tools and/or manually install
@@ -201,15 +222,25 @@ return {
 
 		-- You can add other tools here that you want Mason to install
 		-- for you, so that they are available from within Neovim.
-		local ensure_installed = vim.tbl_keys(servers or {})
+		local ensure_installed = vim.tbl_map(function(name)
+			if name == "tsserver" or name == "ts_ls" then
+				return "typescript-language-server"
+			end
+			return name
+		end, vim.tbl_keys(servers or {}))
 		vim.list_extend(ensure_installed, {
 			"roslyn",
 			"stylua", -- Used to format Lua code
 		})
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
+		local mason_lsp_ensure = { "html", "cssls" }
+		if tsserver_name then
+			table.insert(mason_lsp_ensure, tsserver_name)
+		end
+
 		require("mason-lspconfig").setup({
-			ensure_installed = { "roslyn" },
+			ensure_installed = mason_lsp_ensure,
 			handlers = {
 				function(server_name)
 					local server = servers[server_name] or {}
@@ -217,7 +248,7 @@ return {
 					-- by the server configuration above. Useful when disabling
 					-- certain features of an LSP (for example, turning off formatting for tsserver)
 					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-					require("lspconfig")[server_name].setup(server)
+					lspconfig[server_name].setup(server)
 				end,
 			},
 		})
