@@ -147,65 +147,21 @@ return {
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-		local lspconfig = require("lspconfig")
-		local tsserver_name = "ts_ls"
-		if not lspconfig[tsserver_name] and lspconfig.ts_ls then
-			tsserver_name = "ts_ls"
-		end
-
-		-- Enable the following language servers
-		--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-		--
-		--  Add any additional override configuration in the following tables. Available keys are:
-		--  - cmd (table): Override the default command used to start the server
-		--  - filetypes (table): Override the default list of associated filetypes for the server
-		--  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-		--  - settings (table): Override the default settings passed when initializing the server.
-		--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-		local servers = {
-			-- clangd = {},
-			-- gopls = {},
-			-- pyright = {},
-			-- rust_analyzer = {},
-			-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-			--
-			-- Some languages (like typescript) have entire language plugins that can be useful:
-			--    https://github.com/pmizio/typescript-tools.nvim
-			--
-			-- But for many setups, the LSP (`tsserver`) will work just fine
-			-- tsserver = {},
-			--
-
-			lua_ls = {
-				-- cmd = {...},
-				-- filetypes = { ...},
-				-- capabilities = {},
-				settings = {
-					Lua = {
-						completion = {
-							callSnippet = "Replace",
-						},
-						-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-						-- diagnostics = { disable = { 'missing-fields' } },
+		vim.lsp.config("ts_ls", {
+			typescript = { format = { enable = false } },
+			javascript = { format = { enable = false } },
+		})
+		vim.lsp.config("lua_ls", {
+			settings = {
+				Lua = {
+					completion = {
+						callSnippet = "Replace",
 					},
 				},
 			},
-			html = {},
-			cssls = {},
-		}
-
-		if tsserver_name then
-			servers[tsserver_name] = {
-				settings = {
-					typescript = {
-						format = { enable = false },
-					},
-					javascript = {
-						format = { enable = false },
-					},
-				},
-			}
-		end
+		})
+		vim.lsp.config("html", {})
+		vim.lsp.config("cssls", {})
 
 		-- Ensure the servers and tools above are installed
 		--  To check the current status of installed tools and/or manually install
@@ -234,10 +190,7 @@ return {
 		})
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-		local mason_lsp_ensure = { "html", "cssls" }
-		if tsserver_name then
-			table.insert(mason_lsp_ensure, tsserver_name)
-		end
+		local mason_lsp_ensure = { "html", "cssls", "ts_ls" }
 
 		require("mason-lspconfig").setup({
 			ensure_installed = mason_lsp_ensure,

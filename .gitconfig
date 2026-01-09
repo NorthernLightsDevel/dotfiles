@@ -50,3 +50,5 @@
 	enabled = false
 [url "ssh://git@github.com/"]
 	insteadOf = https://github.com/
+[includeIf "gitdir:~/git/Futureworks/"]
+	path = /home/peroyhav/git/Futureworks/.gitsecrets

@@ -207,10 +207,8 @@
     "format": "{icon} {text}",
     //"tooltip-format": "{tooltip}",
     "on-click": "/usr/bin/timetracker-waybar toggle",
-    "on-click-right": "/usr/bin/timetracker-waybar stop",
-    "on-click-middle": "/usr/bin/timetracker-waybar project-menu",
-    "on-scroll-up": "/usr/bin/timetracker-waybar prompt-note",
-    "on-scroll-down": "/usr/bin/timetracker-waybar comment --clear",
+    "on-click-right": "/usr/bin/timetracker-waybar switch",
+    "on-click-middle": "/usr/bin/timetracker-waybar prompt-note",
     "format-icons": {
       "running": "",
       "paused": "",

@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Per Øyvind Håvelsrud",
+  "classifications": [
+    "C#",
+    "record"
+  ],
+  "identity": "Per.RecordTemplate",
+  "name": "Custom C# public record",
+  "shortName": "r",
+  "sourceName": "Class",
+  "symbols": {
+    "classname": {
+      "type": "parameter",
+      "datatype": "string",
+      "replaces": "{{classname}}"
+    },
+    "namespace": {
+      "type": "parameter",
+      "datatype": "string",
+      "replaces": "{{namespace}}"
+    }
+  },
+  "primaryOutputs": [
+    {
+      "path": "Class.cs"
+    }
+  ]
+}
