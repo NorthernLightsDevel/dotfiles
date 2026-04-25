@@ -14,6 +14,11 @@ if [ ! -e "${HOME}/.config/alacritty/alacritty.toml" ]; then
    ln -s ${WD}/alacritty.toml "${HOME}/.config/alacritty/alacritty.toml"
 fi
 
+if [ ! -e "${HOME}/.config/wezterm" ]; then
+   mkdir -p "${HOME}/.config"
+   ln -s "${WD}/wezterm" "${HOME}/.config/wezterm"
+fi
+
 if [ ! -e "${HOME}/.config/hypr/hyprland.conf" ]; then
    ln -sf "${WD}/hypr" "${HOME}/.config/hypr"
 fi

@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/clipboard-image-to-ssh"
+LAST_HOST_FILE="${CACHE_DIR}/last-host"
+REMOTE_DIR="${REMOTE_AI_UPLOAD_DIR:-/tmp/ai-clipboard}"
+
+mkdir -p "$CACHE_DIR"
+
+notify() {
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send "$@"
+    fi
+}
+
+fail() {
+    local message="$1"
+    notify "Clipboard Upload Failed" "$message"
+    printf '%s\n' "$message" >&2
+    exit 1
+}
+
+pick_host() {
+    local explicit_host="${1:-}"
+    local last_host=""
+    local host=""
+    local -a hosts=()
+
+    if [[ -n "$explicit_host" ]]; then
+        printf '%s\n' "$explicit_host"
+        return 0
+    fi
+
+    if [[ -n "${REMOTE_AI_SSH_TARGET:-}" ]]; then
+        printf '%s\n' "$REMOTE_AI_SSH_TARGET"
+        return 0
+    fi
+
+    if [[ -f "$LAST_HOST_FILE" ]]; then
+        last_host="$(<"$LAST_HOST_FILE")"
+    fi
+
+    if [[ -f "$HOME/.ssh/config" ]]; then
+        mapfile -t hosts < <(
+            awk '
+                tolower($1) == "host" {
+                    for (i = 2; i <= NF; i++) {
+                        if ($i !~ /[*?]/) {
+                            print $i
+                        }
+                    }
+                }
+            ' "$HOME/.ssh/config" | awk '!seen[$0]++'
+        )
+    fi
+
+    [[ "${#hosts[@]}" -gt 0 ]] || fail "No SSH hosts found in ~/.ssh/config. Set REMOTE_AI_SSH_TARGET or add a Host entry."
+
+    if [[ -n "$last_host" ]]; then
+        hosts=("$last_host" "${hosts[@]}")
+        mapfile -t hosts < <(printf '%s\n' "${hosts[@]}" | awk '!seen[$0]++')
+    fi
+
+    if command -v wofi >/dev/null 2>&1; then
+        host="$(
+            printf '%s\n' "${hosts[@]}" \
+                | wofi --dmenu --prompt "Upload clipboard image to SSH host" --width 500
+        )"
+    else
+        fail "No REMOTE_AI_SSH_TARGET configured and wofi is not available for host selection."
+    fi
+
+    [[ -n "$host" ]] || fail "No SSH host selected."
+    printf '%s\n' "$host"
+}
+
+detect_mime() {
+    local mime_types
+
+    mime_types="$(wl-paste --list-types 2>/dev/null || true)"
+    [[ -n "$mime_types" ]] || fail "Clipboard is unavailable."
+
+    for candidate in image/png image/jpeg image/webp image/gif image/bmp; do
+        if printf '%s\n' "$mime_types" | grep -qx "$candidate"; then
+            printf '%s\n' "$candidate"
+            return 0
+        fi
+    done
+
+    fail "Clipboard does not currently contain an image."
+}
+
+extension_for_mime() {
+    case "$1" in
+        image/png) printf 'png\n' ;;
+        image/jpeg) printf 'jpg\n' ;;
+        image/webp) printf 'webp\n' ;;
+        image/gif) printf 'gif\n' ;;
+        image/bmp) printf 'bmp\n' ;;
+        *) fail "Unsupported image MIME type: $1" ;;
+    esac
+}
+
+main() {
+    local host="${1:-}"
+    local mime
+    local extension
+    local local_file
+    local file_name
+    local remote_path
+
+    command -v wl-paste >/dev/null 2>&1 || fail "wl-paste is required."
+    command -v wl-copy >/dev/null 2>&1 || fail "wl-copy is required."
+    command -v ssh >/dev/null 2>&1 || fail "ssh is required."
+    command -v scp >/dev/null 2>&1 || fail "scp is required."
+
+    host="$(pick_host "$host")"
+    mime="$(detect_mime)"
+    extension="$(extension_for_mime "$mime")"
+
+    local_file="$(mktemp --suffix ".${extension}")"
+    trap 'rm -f "$local_file"' EXIT
+
+    wl-paste --type "$mime" >"$local_file"
+    [[ -s "$local_file" ]] || fail "Clipboard image was empty."
+
+    file_name="clipboard-$(date +%Y%m%d-%H%M%S)-$RANDOM.${extension}"
+    remote_path="${REMOTE_DIR%/}/${file_name}"
+
+    ssh "$host" "mkdir -p '$REMOTE_DIR'" >/dev/null
+    scp -q "$local_file" "$host:$remote_path"
+
+    printf '%s' "$host" >"$LAST_HOST_FILE"
+    printf '%s' "$remote_path" | wl-copy
+
+    notify "Clipboard Image Uploaded" "$host:$remote_path copied to clipboard"
+    printf '%s\n' "$remote_path"
+}
+
+main "${1:-}"
