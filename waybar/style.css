@@ -1,7 +1,31 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
-    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
     font-size: 13px;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#power-profiles-daemon,
+#mpd,
+#custom-pacman,
+#custom-timetracker,
+#keyboard-state,
+#power-profiles-daemon {
+    font-family: Roboto, Helvetica, Arial, sans-serif, "Font Awesome 7 Free Solid", "Font Awesome 7 Free", "Font Awesome 7 Brands";
 }
 
 window#waybar {

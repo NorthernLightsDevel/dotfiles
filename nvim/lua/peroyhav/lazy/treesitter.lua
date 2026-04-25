@@ -1,6 +1,5 @@
 return { -- Highlight, edit, and navigate code
 	"nvim-treesitter/nvim-treesitter",
-	version = "v0.9.3",
 	build = ":TSUpdate",
 	opts = {
 		ensure_installed = {
@@ -8,6 +7,7 @@ return { -- Highlight, edit, and navigate code
 			"c",
 			"diff",
 			"html",
+			"http",
 			"lua",
 			"luadoc",
 			"markdown",
@@ -25,14 +25,15 @@ return { -- Highlight, edit, and navigate code
 			--  If you are experiencing weird indenting issues, add the language to
 			--  the list of additional_vim_regex_highlighting and disabled languages for indent.
 			additional_vim_regex_highlighting = { "ruby" },
+			disable = { "markdown", "markdown_inline" },
 		},
-		indent = { enable = true, disable = { "ruby" } },
+		indent = { enable = true, disable = { "ruby", "markdown", "markdown_inline" } },
 	},
 	config = function(_, opts)
 		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
 		---@diagnostic disable-next-line: missing-fields
-		require("nvim-treesitter.configs").setup(opts)
+		require("nvim-treesitter").setup(opts)
 
 		-- There are additional nvim-treesitter modules that you can use to interact
 		-- with nvim-treesitter. You should go explore a few and see what interests you:

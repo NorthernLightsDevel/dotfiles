@@ -25,3 +25,8 @@ blue       = '#2a7bde'
 magenta    = '#c061cb'
 cyan       = '#33c7de'
 white      = '#ffffff'
+
+[keyboard]
+bindings = [
+  { key = "I", mods = "Control|Shift", command = { program = "/home/peroyhav/git/dotfiles/bin/upload-clipboard-image-to-ssh" } },
+]
